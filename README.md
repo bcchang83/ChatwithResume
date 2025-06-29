@@ -4,7 +4,7 @@
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/Emruur/HexapodSpider.git
+   git clone https://github.com/bcchang83/ChatwithResume.git
    cd ChatwithResume
 2. Create and open a virtual environment:
    ```bash
