@@ -32,8 +32,22 @@ if uploaded_file:
     chain = ConversationalRetrievalChain.from_llm(
         llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo"),
         retriever=retriever,
+        return_source_documents=True
     )
+    # Create summary at sidebar
+    with st.sidebar:
+        st.header("📌 Resume Summary")
 
+        summary_prompt = "Please summarize this resume in 3-5 bullet points. Focus on technical skills and work experience."
+        #summary_result = ChatOpenAI(model="gpt-3.5-turbo").predict(
+        #    f"{summary_prompt}\n\n{pages[0].page_content[:3000]}"
+        #)
+        resume_text = "\n".join([p.page_content for p in pages[:3]]) # include first 3 pages
+        summary_result = ChatOpenAI(model="gpt-3.5-turbo").predict(
+            f"{summary_prompt}\n\n{resume_text}"
+        )
+        st.markdown(summary_result)
+    
     st.success("Resume loaded! Start chatting below 👇")
     chat_history = []
 
@@ -42,10 +56,14 @@ if uploaded_file:
 
     if user_input:
         with st.spinner("Thinking..."):
-            result = chain.run({"question": user_input, "chat_history": chat_history})
+            # result = chain.run({"question": user_input, "chat_history": chat_history})
+            result = chain({"question": user_input, "chat_history": chat_history})
             chat_history.append((user_input, result))
             st.markdown(f"**You:** {user_input}")
-            st.markdown(f"**AI:** {result}")
+            # st.markdown(f"**AI:** {result}")
+            st.markdown(f"**AI:** {result['answer']}")
+            for doc in result["source_documents"]:
+                st.markdown(f"📄 **Source:** {doc.page_content[:300]}...")
 
 # Optional: cleanup temp files on rerun
 if uploaded_file:
