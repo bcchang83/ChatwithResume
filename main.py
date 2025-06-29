@@ -10,6 +10,9 @@ import os
 
 st.set_page_config(page_title="Chat with your Resume", layout="wide")
 st.title("🤖 Chat with your Resume")
+# Initialize chat history in session_state
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
 # Upload PDF file
 uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
@@ -49,21 +52,25 @@ if uploaded_file:
         st.markdown(summary_result)
     
     st.success("Resume loaded! Start chatting below 👇")
-    chat_history = []
+    #chat_history = []
+
 
     # Chat interface
     user_input = st.text_input("Ask a question about your resume:")
 
     if user_input:
         with st.spinner("Thinking..."):
-            # result = chain.run({"question": user_input, "chat_history": chat_history})
-            result = chain({"question": user_input, "chat_history": chat_history})
-            chat_history.append((user_input, result))
-            st.markdown(f"**You:** {user_input}")
-            # st.markdown(f"**AI:** {result}")
-            st.markdown(f"**AI:** {result['answer']}")
-            for doc in result["source_documents"]:
-                st.markdown(f"📄 **Source:** {doc.page_content[:300]}...")
+            result = chain({"question": user_input, "chat_history": st.session_state.chat_history})
+            #st.session_state.chat_history.append((user_input, result))
+            st.session_state.chat_history.append((user_input, result["answer"]))
+
+    # Show chat history
+    for q, a in st.session_state.chat_history:
+        st.markdown(f"**You:** {q}")
+        # st.markdown(f"**AI:** {a['answer']}")   
+        st.markdown(f"**AI:** {a}")
+    
+
 
 # Optional: cleanup temp files on rerun
 if uploaded_file:
