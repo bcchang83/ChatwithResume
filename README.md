@@ -13,3 +13,7 @@
 3. Install the dependencies:
    ```bash
    pip install streamlit langchain openai faiss-cpu pypdf
+
+## How to run it?
+```bash
+streamlit run main.py
