@@ -1,10 +1,5 @@
 
 import streamlit as st
-# from langchain.chat_models import ChatOpenAI
-# from langchain.chains import ConversationalRetrievalChain
-# from langchain.document_loaders import PyPDFLoader
-# from langchain.vectorstores import FAISS
-# from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.document_loaders import PyPDFLoader
@@ -15,8 +10,8 @@ import os
 
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
-st.set_page_config(page_title="Chat with your Resume", layout="wide")
-st.title("🤖 Chat with your Resume")
+st.set_page_config(page_title="Chat with Resume", layout="wide")
+st.title("🤖 Chat with Resume")
 # Initialize chat history in session_state
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
@@ -50,9 +45,6 @@ if uploaded_file:
         st.header("📌 Resume Summary")
 
         summary_prompt = "Please summarize this resume in 3-5 bullet points. Focus on technical skills and work experience."
-        #summary_result = ChatOpenAI(model="gpt-3.5-turbo").predict(
-        #    f"{summary_prompt}\n\n{pages[0].page_content[:3000]}"
-        #)
         resume_text = "\n".join([p.page_content for p in pages[:3]]) # include first 3 pages
         summary_result = ChatOpenAI(model="gpt-3.5-turbo").predict(
             f"{summary_prompt}\n\n{resume_text}"
@@ -80,7 +72,6 @@ if uploaded_file:
     if user_input:
         with st.spinner("Thinking..."):
             result = chain({"question": user_input, "chat_history": st.session_state.chat_history})
-            #st.session_state.chat_history.append((user_input, result))
             st.session_state.chat_history.append((user_input, result["answer"]))
             # Show source
             if "source_documents" in result:
@@ -107,8 +98,6 @@ if uploaded_file:
             mime="text/plain"
         )
 
-
-
-# Optional: cleanup temp files on rerun
+# Clean up temp files on rerun
 if uploaded_file:
     os.remove(tmp_path)
