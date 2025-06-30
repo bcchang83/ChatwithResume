@@ -16,4 +16,4 @@
 
 ## How to run it?
 ```bash
-streamlit run main.py
+streamlit run app.py
