@@ -8,11 +8,11 @@
    cd ChatwithResume
 2. Create and open a virtual environment:
    ```bash
-   conda create --name venv python=3.11
+   conda create --name venv python=3.13.5
    conda activate venv
 3. Install the dependencies:
    ```bash
-   pip install streamlit langchain openai faiss-cpu pypdf
+   pip install -r requirements.txt
 
 ## How to run it?
 ```bash
