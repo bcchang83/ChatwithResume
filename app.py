@@ -13,6 +13,8 @@ from langchain_community.embeddings import OpenAIEmbeddings
 import tempfile
 import os
 
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
 st.set_page_config(page_title="Chat with your Resume", layout="wide")
 st.title("🤖 Chat with your Resume")
 # Initialize chat history in session_state
